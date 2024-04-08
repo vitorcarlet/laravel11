@@ -21,14 +21,15 @@ class SupportController extends Controller
     }
 
     public function index(Request $request){
+        $supports = $this->service->paginate(
+            page: $request->get('page', 1),
+            totalPerPage: $request->get('per_page',1),
+            filter: $request->filter,
+        );
 
+        $filters = ['filter' => $request->get('filter', '')];
 
-
-        $supports = $this->service->getAll($request->filter);
-
-        //dd($supports);
-
-        return view('admin/supports/index', compact('supports'));
+        return view('admin/supports/index', compact('supports', 'filters'));
     }
 
     public function create(){
@@ -37,7 +38,7 @@ class SupportController extends Controller
 
     public function store(StoreUpdateSupport $request, Support $support){
         $this->service->new(
-            CreateSupportDTO::makeFromfromRequest($request)
+            CreateSupportDTO::makeFromRequest($request)
         );
         
         return redirect()->route('supports.index');
@@ -62,7 +63,7 @@ class SupportController extends Controller
     public function update(StoreUpdateSupport $request, Support $support, string|int $id){
         
         $support = $this->service->update(
-            UpdateSupportDTO::makeFromfromRequest($request)
+            UpdateSupportDTO::makeFromRequest($request)
         );
         
         if(!$support) {
