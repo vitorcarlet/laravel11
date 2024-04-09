@@ -24,6 +24,6 @@
 </table>
 
 <x-pagination 
-:pagin="$supports" 
+:paginator="$supports" 
 :appends="$filters"
 />
