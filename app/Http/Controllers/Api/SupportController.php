@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTO\Supports\CreateSupportDTO;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SupportResource;
 use App\Services\SupportService;
 use Illuminate\Http\Request;
 
@@ -10,11 +12,8 @@ class SupportController extends Controller
 {
 
     public function __construct(
-        protected SupportService $service
-    )
-    {
-        
-    }
+        protected SupportService $service,
+    ) {}
     /**
      * Display a listing of the resource.
      */
@@ -28,7 +27,11 @@ class SupportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $support = $this->service->new(
+            CreateSupportDTO::makeFromRequest($request)
+        );
+
+        return new SupportResource($support);
     }
 
     /**
